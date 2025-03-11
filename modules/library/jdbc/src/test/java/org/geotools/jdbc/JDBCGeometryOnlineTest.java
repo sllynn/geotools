@@ -139,7 +139,7 @@ public abstract class JDBCGeometryOnlineTest extends JDBCTestSupport {
 
         SimpleFeatureType newSchema = dataStore.getSchema(featureTypeName);
         assertNotNull(newSchema);
-        assertEquals(3, newSchema.getAttributeCount());
+        assertEquals(4, newSchema.getAttributeCount());
         return newSchema.getGeometryDescriptor().getType().getBinding();
     }
 }

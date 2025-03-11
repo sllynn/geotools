@@ -102,6 +102,7 @@ public class MetadataTablePrimaryKeyFinder extends PrimaryKeyFinder {
         PreparedStatement st = null;
 
         String metadataSchema = getMetadataSchema(store);
+        String metadataCatalog = getMetadataCatalog(store);
 
         try {
             // first off, make sure the metadata table is there (we'll also
@@ -116,7 +117,7 @@ public class MetadataTablePrimaryKeyFinder extends PrimaryKeyFinder {
                             // resulting in error messages. It also checks for case sensitivity.
                             tablesRs = cx.getMetaData()
                                     .getTables(
-                                            null,
+                                            metadataCatalog,
                                             metadataSchema,
                                             "%",
                                             store.getSQLDialect().getDesiredTablesType());
@@ -263,5 +264,10 @@ public class MetadataTablePrimaryKeyFinder extends PrimaryKeyFinder {
         if (tableSchema != null) return tableSchema;
 
         return store.getDatabaseSchema();
+    }
+
+    String getMetadataCatalog(JDBCDataStore store) {
+
+        return store.getDatabaseCatalog();
     }
 }

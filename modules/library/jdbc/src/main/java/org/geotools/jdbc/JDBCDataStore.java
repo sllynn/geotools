@@ -222,6 +222,9 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
     /** The database schema. */
     protected String databaseSchema;
 
+    /** The database catalog. */
+    protected String databaseCatalog;
+
     /** sql type to java class mappings */
     protected HashMap<Integer, Class<?>> sqlTypeToClassMappings;
 
@@ -467,6 +470,24 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
      */
     public String getDatabaseSchema() {
         return databaseSchema;
+    }
+
+    /**
+     * The schema from which this datastore is serving tables from.
+     *
+     * @return the schema, or <code>null</code> if non specified.
+     */
+    public String getDatabaseCatalog() {
+        return databaseCatalog;
+    }
+
+    /**
+     * Set the database catalog for the datastore.
+     *
+     * @param databaseCatalog The catalog, may be <code>null</code>.
+     */
+    public void setDatabaseCatalog(String databaseCatalog) {
+        this.databaseCatalog = databaseCatalog;
     }
 
     /**
@@ -965,7 +986,7 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
                 }
             }
             ResultSet tables = metaData.getTables(
-                    null, escapeNamePattern(metaData, databaseSchema), "%", queryTypes.toArray(new String[0]));
+                    databaseCatalog, escapeNamePattern(metaData, databaseSchema), "%", queryTypes.toArray(new String[0]));
             try {
                 if (fetchSize > 1) {
                     tables.setFetchSize(fetchSize);
@@ -1072,7 +1093,7 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
         ResultSet tables = null;
         try {
             tables = metaData.getTables(
-                    null,
+                    databaseCatalog,
                     escapeNamePattern(metaData, databaseSchema),
                     escapeNamePattern(metaData, tableName),
                     new String[] {"VIEW"});
@@ -1169,7 +1190,7 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
         ResultSet columns = null;
         try {
             columns = metaData.getColumns(
-                    null,
+                    databaseCatalog,
                     escapeNamePattern(metaData, databaseSchema),
                     escapeNamePattern(metaData, tableName),
                     escapeNamePattern(metaData, columnName));
@@ -2486,7 +2507,7 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
         // look for feature relationship table
         DatabaseMetaData metadata = cx.getMetaData();
         ResultSet tables = metadata.getTables(
-                null,
+                databaseCatalog,
                 escapeNamePattern(metadata, databaseSchema),
                 escapeNamePattern(metadata, FEATURE_RELATIONSHIP_TABLE),
                 null);
@@ -2511,7 +2532,7 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
 
         // look for feature association table
         tables = metadata.getTables(
-                null,
+                databaseCatalog,
                 escapeNamePattern(metadata, databaseSchema),
                 escapeNamePattern(metadata, FEATURE_ASSOCIATION_TABLE),
                 null);
@@ -2536,7 +2557,7 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
 
         // look up for geometry table
         tables = metadata.getTables(
-                null, escapeNamePattern(metadata, databaseSchema), escapeNamePattern(metadata, GEOMETRY_TABLE), null);
+                databaseCatalog, escapeNamePattern(metadata, databaseSchema), escapeNamePattern(metadata, GEOMETRY_TABLE), null);
 
         try {
             if (!tables.next()) {
@@ -2558,7 +2579,7 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
 
         // look up for multi geometry table
         tables = metadata.getTables(
-                null,
+                databaseCatalog,
                 escapeNamePattern(metadata, databaseSchema),
                 escapeNamePattern(metadata, MULTI_GEOMETRY_TABLE),
                 null);
@@ -2583,7 +2604,7 @@ public final class JDBCDataStore extends ContentDataStore implements GmlObjectSt
 
         // look up for metadata for geometry association table
         tables = metadata.getTables(
-                null,
+                databaseCatalog,
                 escapeNamePattern(metadata, databaseSchema),
                 escapeNamePattern(metadata, GEOMETRY_ASSOCIATION_TABLE),
                 null);

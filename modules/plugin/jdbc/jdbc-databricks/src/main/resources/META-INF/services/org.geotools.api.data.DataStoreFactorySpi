@@ -1,0 +1,2 @@
+org.geotools.data.databricks.DatabricksDataStoreFactory
+org.geotools.data.databricks.DatabricksJNDIDataStoreFactory
